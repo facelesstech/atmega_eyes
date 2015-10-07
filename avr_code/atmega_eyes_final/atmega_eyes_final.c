@@ -20,52 +20,161 @@ int buttonPushCounter = 1; // Keeps count of the button pushes
 
 // Timer amounts
 volatile unsigned long timerMillis1;
-long eyeSince1 = 0;
-long eyeSince2 = 1000;
-long eyeSince3 = 2000;
-long eyeSince4 = 3000;
-long eyeWaitTime = 4000;
+long blinkSince1 = 0;
+long blinkSince2 = 50;
+long blinkSince3 = 100;
+long blinkSince4 = 150;
+long blinkWaitTime = 200;
+
+long lookSince1 = 0;
+long lookSince2 = 200;
+long lookSince3 = 400;
+long lookSince4 = 1000;
+long lookSince5 = 1200;
+long lookSince6 = 1400;
+long lookSince7 = 1600;
+long lookSince8 = 2400;
+long lookWaitTime = 2400;
 
 long heartSince1 = 0;
 long heartSince2 = 1000;
 long heartWaitTime = 2000;
 
-long rotateSince1 = 0;
-long rotateSince2 = 10000;
-long rotateWaitTime = 20000;
+long skullSince1 = 0;
+long skullSince2 = 1000;
+long skullWaitTime = 2000;
+
+long blinkRotateSince1 = 3000;
+long blinkRotateSince2 = 200;
+long blinkRotateWaitTime = 3000;
+
+long rotateSince1 = 10000;
+long rotateWaitTime = 10000;
 
 int eyeRotate = 0;
+int blinkRotate = 0;
 
-const __flash uint8_t eye[8] = {
+// Blink 1
+const __flash uint8_t animationTwo[8] = {
         0b00000000,
         0b00111100,
         0b01111110,
-        0b01100110,
-        0b01100110,
+        0b11111111,
         0b01111110,
         0b00111100,
-        0b0000000};
+        0b00000000,
+        0b00000000};
 
-const __flash uint8_t eye1[8] = {
+// Blink 2
+const __flash uint8_t animationThree[8] = {
+        0b00000000,
         0b00000000,
         0b00111100,
         0b01111110,
+        0b00111100,
+        0b00000000,
+        0b00000000,
+        0b00000000};
+
+// Blank 3
+const __flash uint8_t animationFour[8] = {
+        0b00000000,
+        0b00000000,
+        0b00000000,
+        0b00111100,
+        0b00000000,
+        0b00000000,
+        0b00000000,
+        0b00000000};
+
+// Eye 1
+const __flash uint8_t animationLookHome[8] = {
+        0b00111100,
+        0b01111110,
+        0b11111111,
+        0b11100111,
+        0b11100111,
+        0b01111110,
+        0b00111100,
+        0b00000000};
+ 
+// Eye 2
+const __flash uint8_t animationLook1[8] = {
+        0b00111100,
+        0b01111110,
+        0b11111111,
+        0b11001111,
+        0b11001111,
+        0b01111110,
+        0b00111100,
+        0b00000000};
+// Eye 3
+const __flash uint8_t animationLook2[8] = {
+        0b00111100,
+        0b01111110,
+        0b11111111,
+        0b10011111,
+        0b10011111,
+        0b01111110,
+        0b00111100,
+        0b00000000};
+
+// Eye 4
+const __flash uint8_t animationLook3[8] = {
+        0b00111100,
+        0b01111110,
+        0b11111111,
+        0b11111111,
+        0b11001111,
         0b01001110,
-        0b01001110,
-        0b01111110,
         0b00111100,
-        0b0000000};
+        0b00000000};
 
-const __flash uint8_t eye2[8] = {
-        0b00000000,
+// Eye 5 
+const __flash uint8_t animationLook4[8] = {
         0b00111100,
         0b01111110,
-        0b01110010,
-        0b01110010,
-        0b01111110,
+        0b11111111,
+        0b11111111,
+        0b11100111,
+        0b01100110,
         0b00111100,
-        0b0000000};
+        0b00000000};
 
+// Eye 6
+const __flash uint8_t animationLook5[8] = {
+        0b00111100,
+        0b01111110,
+        0b11111111,
+        0b11111111,
+        0b11110011,
+        0b01110010,
+        0b00111100,
+        0b00000000};
+
+// Eye 7
+const __flash uint8_t animationLook6[8] = {
+        0b00111100,
+        0b01111110,
+        0b11111111,
+        0b11111001,
+        0b11111001,
+        0b01111110,
+        0b00111100,
+        0b00000000};
+
+// Eye 8 
+const __flash uint8_t animationLook7[8] = {
+        0b00111100,
+        0b01111110,
+        0b11111111,
+        0b11110011,
+        0b11110011,
+        0b01111110,
+        0b00111100,
+        0b00000000};
+
+// Heart 1
 const __flash uint8_t bigHeart[8] = {
         0b01100110,
         0b11111111,
@@ -75,7 +184,8 @@ const __flash uint8_t bigHeart[8] = {
         0b00111100,
         0b00011000,
         0b00000000};
-          
+
+// Heart 2 
 const __flash uint8_t smallHeart[8] = {
         0b00000000,
         0b00100100,
@@ -86,26 +196,28 @@ const __flash uint8_t smallHeart[8] = {
         0b00000000,
         0b00000000};
 
-//const __flash uint8_t bigHeart[8] = {
-//        0b11111111,
-//        0b10000001,
-//        0b10000001,
-//        0b10000001,
-//        0b10000001,
-//        0b10000001,
-//        0b10000001,
-//        0b11111111};
-//
-//          
-//const __flash uint8_t smallHeart[8] = {
-//        0b00000000,
-//        0b00100100,
-//        0b01111110,
-//        0b01111110,
-//        0b00111100,
-//        0b00011000,
-//        0b00000000,
-//        0b00000000};
+// Skull 1
+const __flash uint8_t skullOne[8] = {
+        0b01111110,
+        0b11111111,
+        0b10011001,
+        0b11011101,
+        0b11111111,
+        0b01111110,
+        0b01011010,
+        0b00000000};
+
+// Skull 2
+const __flash uint8_t skullTwo[8] = {
+        0b01111110,
+        0b11111111,
+        0b10011001,
+        0b10111011,
+        0b11111111,
+        0b01111110,
+        0b01011010,
+        0b00000000};
+
 void setColor(int red, int green, int blue)
 {
   OCR2B = 255 - red; // Set PWM rate 0 - 255 RED
@@ -126,7 +238,6 @@ void spiSend(uint8_t data)
 	    DATA_LOW();
 	CLK_HIGH();
     }
-    
 }
 
 void max7219Writec(uint8_t highByte, uint8_t lowByte)
@@ -199,7 +310,6 @@ void setPixel(uint8_t r, uint8_t c, uint8_t value)
     }
 }
 
-
 ISR (TIMER1_COMPA_vect)
 {
     timerMillis1++;
@@ -209,66 +319,175 @@ unsigned long millis()
 {
   unsigned long millisReturn;
 
+  ATOMIC_BLOCK(ATOMIC_FORCEON) // Ensure this cannot be disrupted
+  { 
   millisReturn = timerMillis1;
+  }
  
   return millisReturn;
 }
 
+void eyeBlink ()
+{
+  if (millis() >= blinkRotateSince1) 
+  {
+    blinkRotate = 0;
+    blinkRotateSince1 += blinkRotateWaitTime;
+  }
+  
+  if (millis() >= blinkRotateSince2)
+  {
+    blinkRotate = 1;
+    blinkRotateSince2 += blinkRotateWaitTime;
+  }
+}
+
 void eyeHeart ()
 {
-  if (millis() >= rotateSince1) {
-    eyeRotate = 0;
+  if (millis() >= rotateSince1) 
+  {
+    eyeRotate++;
+    if (eyeRotate == 3) 
+    {
+      eyeRotate = 0;
+    }
     rotateSince1 += rotateWaitTime;
-    }
-
-  if (millis() >= rotateSince2) {
-    eyeRotate = 1; 
-    rotateSince2 += rotateWaitTime;
-    }
+  }
 }
 
 void eyeDisplay ()
 {
   if (eyeRotate == 0)
   {
-    if (millis() >= eyeSince1) {
-      image(eye); // Load image
-      updateDisplay(); // Display on led
-      eyeSince1 += eyeWaitTime;
+  
+    if ( blinkRotate == 0)
+    {
+
+      if (millis() >= blinkSince1) 
+      {
+        image(animationTwo); // Load image
+        updateDisplay(); // Display on led
+        blinkSince1 += blinkWaitTime;
       }
 
-    if (millis() >= eyeSince2) {
-      image(eye1); // Load image
-      updateDisplay(); // Display on led
-      eyeSince2 += eyeWaitTime;
+      if (millis() >= blinkSince2) 
+      {
+        image(animationThree); // Load image
+        updateDisplay(); // Display on led
+        blinkSince2 += blinkWaitTime;
       }
 
-    if (millis() >= eyeSince3) {
-      image(eye); // Load image
-      updateDisplay(); // Display on led
-      eyeSince3 += eyeWaitTime;
+      if (millis() >= blinkSince3) 
+      {
+        image(animationFour); // Load image
+        updateDisplay(); // Display on led
+        blinkSince3 += blinkWaitTime;
       }
 
-    if (millis() >= eyeSince4) {
-      image(eye2); // Load image
-      updateDisplay(); // Display on led
-      eyeSince4 += eyeWaitTime;
+      if (millis() >= blinkSince4) 
+      {
+        image(animationTwo); // Load image
+        updateDisplay(); // Display on led
+        blinkSince4 += blinkWaitTime;
       }
+    }
+
+    if ( blinkRotate == 1)
+    {
+
+      if (millis() >= lookSince1) 
+      {
+        image(animationLookHome); // Load image
+        updateDisplay(); // Display on led
+        lookSince1 += lookWaitTime;
+      }
+
+      if (millis() >= lookSince2) 
+      {
+        image(animationLook1); // Load image
+        updateDisplay(); // Display on led
+        lookSince2 += lookWaitTime;
+      }
+
+      if (millis() >= lookSince3) 
+      {
+        image(animationLook2); // Load image
+        updateDisplay(); // Display on led
+        lookSince3 += lookWaitTime;
+      }
+
+      if (millis() >= lookSince4) 
+      {
+        image(animationLook3); // Load image
+        updateDisplay(); // Display on led
+        lookSince4 += lookWaitTime;
+      }
+
+      if (millis() >= lookSince5) 
+      {
+        image(animationLook4); // Load image
+        updateDisplay(); // Display on led
+        lookSince5 += lookWaitTime;
+      }
+
+      if (millis() >= lookSince6) 
+      {
+        image(animationLook5); // Load image
+        updateDisplay(); // Display on led
+        lookSince6 += lookWaitTime;
+      }
+
+      if (millis() >= lookSince7) 
+      {
+        image(animationLook6); // Load image
+        updateDisplay(); // Display on led
+        lookSince7 += lookWaitTime;
+      }
+
+      if (millis() >= lookSince8) 
+      {
+        image(animationLook7); // Load image
+        updateDisplay(); // Display on led
+        lookSince8 += lookWaitTime;
+      }
+
+    }
   }
+  
 
   if (eyeRotate == 1)
   {
-    if (millis() >= heartSince1) {
+    if (millis() >= heartSince1) 
+    {
       image(bigHeart); // Load image
       updateDisplay(); // Display on led
       heartSince1 += heartWaitTime;
-      }
+    }
 
-    if (millis() >= heartSince2) {
+    if (millis() >= heartSince2) 
+    {
       image(smallHeart); // Load image
       updateDisplay(); // Display on led
       heartSince2 += heartWaitTime;
-      }
+    }
+  }
+
+  if (eyeRotate == 2)
+  {
+    if (millis() >= skullSince1) 
+    {
+      image(skullOne);
+      updateDisplay(); // Display on led
+      skullSince1 += skullWaitTime;
+    }
+
+    if (millis() >= skullSince2) 
+    {
+      image(skullTwo);
+      updateDisplay(); // Display on led
+      skullSince2 += skullWaitTime;
+    }
+
   }
 }
  
@@ -290,9 +509,10 @@ void button(void)
           // Do stuff here
           PORTD &= ~_BV(PORTD7); // Candle LED off
           buttonPushCounter++;
-          if (buttonPushCounter == 11) {
+          if (buttonPushCounter == 11) 
+          {
             buttonPushCounter = 1;
-            }
+          }
 
           Pressed = 1;
         }
@@ -316,46 +536,56 @@ void button(void)
 void colourChange(void)
 {
 
-  if (buttonPushCounter == 1) {
+  if (buttonPushCounter == 1) 
+  {
     setColor(255, 255, 0); // YELLOW
-    }
+  }
 
-  if (buttonPushCounter == 2) {
+  if (buttonPushCounter == 2) 
+  {
     setColor(255, 127, 0);  // Orange
-    }
+  }
 
-  if (buttonPushCounter == 3) {
+  if (buttonPushCounter == 3) 
+  {
     setColor(255, 0, 0); // RED
-    }
+  }
 
-  if (buttonPushCounter == 4) {
+  if (buttonPushCounter == 4) 
+  {
     setColor(175, 0, 175);  // Purple
-    }
+  }
 
-  if (buttonPushCounter == 5) {
+  if (buttonPushCounter == 5) 
+  {
     setColor(0, 255, 255);  // Aqua
-    }
+  }
 
-  if (buttonPushCounter == 6) {
+  if (buttonPushCounter == 6)
+  { 
     setColor(0, 0, 255); // BLUE
-    }
+  }
 
-  if (buttonPushCounter == 7) {
+  if (buttonPushCounter == 7) 
+  {
     setColor(0, 255, 0); // GREEN
-    }
+  }
     
-  if (buttonPushCounter == 8) {
+  if (buttonPushCounter == 8) 
+  {
     setColor(255, 255, 255); // WHITE 
-    }
+  }
 
-  if (buttonPushCounter == 9) {
+  if (buttonPushCounter == 9) 
+  {
     PORTD |= _BV(PORTD7); // Candle LED on
     setColor(0, 0, 0); // OFF
-    }
+  }
     
-  if (buttonPushCounter == 10) {
+  if (buttonPushCounter == 10) 
+  {
     setColor(0, 0, 0); // OFF
-    }
+  }
 }
 
 
@@ -388,11 +618,13 @@ int main(void)
   //uint8_t i;
   
   max7219Init(); // Start the 7xxx logic
+
   while (1)
   {
   button();
   eyeDisplay();
   eyeHeart();
+  eyeBlink();
   colourChange();
   }
 }
