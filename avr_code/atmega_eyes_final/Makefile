@@ -12,7 +12,7 @@ PORT=usb
 BAUD=115200
 PROTOCOL=usbtiny
 PART=ATMEGA328
-CFLAGS=-Wall -Os -DF_CPU=$(F_CPU) -mmcu=$(MCU) #-std=c99
+CFLAGS=-Wall -Os -DF_CPU=$(F_CPU) -mmcu=$(MCU) -std=gnu99
 PROG=atmega_eyes_final
 SUDO=sudo
 
