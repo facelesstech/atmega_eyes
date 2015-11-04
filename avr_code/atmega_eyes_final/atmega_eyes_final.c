@@ -16,7 +16,7 @@
 #define DATA_LOW()  PORTB &= ~(1<<PB0)
 #define INIT_PORT() DDRB |= (1<<PB0) | (1<<PB1) | (1<<PB2)
 
-int buttonPushCounter = 9; // Keeps count of the button pushes
+int buttonPushCounter = 8; // Keeps count of the button pushes
 
 // Timer amounts
 volatile unsigned long timerMillis1;
@@ -46,6 +46,16 @@ long scrollSince7 = 900;
 long scrollSince8 = 1050;
 long scrollWaitTime = 1200;
 
+long rollSince1 = 0;
+long rollSince2 = 150;
+long rollSince3 = 300;
+long rollSince4 = 450;
+long rollSince5 = 600;
+long rollSince6 = 900;
+long rollSince7 = 1050;
+long rollSince8 = 1200;
+long rollWaitTime = 1200;
+
 long blinkRotateSince1 = 3900;
 long blinkRotateSince2 = 100;
 long blinkRotateWaitTime = 4000;
@@ -55,6 +65,15 @@ long rotateWaitTime = 10000;
 
 int eyeRotate = 0;
 int blinkRotate = 0;
+
+// RGB 
+int rgbRed = 255;  
+int rgbBlue = 0;  
+int rgbGreen = 255;
+int move = 0;
+// RGB timers
+long rainbowSince1 = 0;
+long rainbowWaitTime = 10; 
 
 // Blink 1
 const __flash uint8_t animationTwo[8] = {
@@ -186,7 +205,7 @@ const __flash uint8_t animationLook8[8] = {
         0b11111111,
         0b00000000};
 
-const __flash uint8_t animationLook9[8] = {
+const __flash uint8_t animationBlank[8] = {
         0b11111111,
         0b11111111,
         0b11111111,
@@ -206,12 +225,65 @@ const __flash uint8_t animationLook10[8] = {
         0b11111111,
         0b00000000};
 
-void setColor(int red, int green, int blue)
-{
-  OCR2B = 255 - red; // Set PWM rate 0 - 255 RED
-  OCR0B = 255 - green; // Set PWM rate 0 - 255 GREEN
-  OCR0A = 255 - blue; // Set PWM rate 0 - 255 BLUE
-}
+const __flash uint8_t animationRoll1[8] = {
+        0b11111111,
+        0b11111111,
+        0b11100111,
+        0b11100111,
+        0b11111111,
+        0b11111111,
+        0b11111111,
+        0b00000000};
+
+const __flash uint8_t animationRoll2[8] = {
+        0b11111111,
+        0b11100111,
+        0b11100111,
+        0b11111111,
+        0b11111111,
+        0b11111111,
+        0b11111111,
+        0b00000000};
+
+const __flash uint8_t animationRoll3[8] = {
+        0b11111111,
+        0b11100111,
+        0b11111111,
+        0b11111111,
+        0b11111111,
+        0b11111111,
+        0b11111111,
+        0b00000000};
+
+const __flash uint8_t animationRoll4[8] = {
+        0b11111111,
+        0b11111111,
+        0b11111111,
+        0b11111111,
+        0b11111111,
+        0b11100111,
+        0b11111111,
+        0b00000000};
+
+const __flash uint8_t animationRoll5[8] = {
+        0b11111111,
+        0b11111111,
+        0b11111111,
+        0b11111111,
+        0b11100111,
+        0b11100111,
+        0b11111111,
+        0b00000000};
+
+const __flash uint8_t animationRoll6[8] = {
+        0b11111111,
+        0b11111111,
+        0b11111111,
+        0b11100111,
+        0b11100111,
+        0b11111111,
+        0b11111111,
+        0b00000000};
 
 void spiSend(uint8_t data)
 {
@@ -335,7 +407,7 @@ void eyeSwitch ()
   if (millis() >= rotateSince1) 
   {
     eyeRotate++;
-    if (eyeRotate == 2) 
+    if (eyeRotate == 3) 
     {
       eyeRotate = 0;
     }
@@ -505,9 +577,76 @@ void eyeDisplay ()
 
       if (millis() >= scrollSince8) 
       {
-        image(animationLook9); // Load image
+        image(animationBlank); // Load image
         updateDisplay(); // Display on led
         scrollSince8 += scrollWaitTime;
+      }
+    }
+  }
+
+  if (eyeRotate == 2)
+  {
+
+    if ( blinkRotate == 0)
+    {
+      eyeBlink();
+    }
+
+    if ( blinkRotate == 1)
+    {
+
+      if (millis() >= rollSince1) {
+        image(animationLookHome); // Load image
+        updateDisplay(); // Display on led
+        rollSince1 += rollWaitTime;
+      }
+
+      if (millis() >= rollSince2) {
+        image(animationRoll1); // Load image
+        updateDisplay(); // Display on led
+        rollSince2 += rollWaitTime;
+      }
+
+      if (millis() >= rollSince3) 
+      {
+        image(animationRoll2); // Load image
+        updateDisplay(); // Display on led
+        rollSince3 += rollWaitTime;
+      }
+
+      if (millis() >= rollSince4) 
+      {
+        image(animationRoll3); // Load image
+        updateDisplay(); // Display on led
+        rollSince4 += rollWaitTime;
+      }
+
+      if (millis() >= rollSince5) 
+      {
+        image(animationBlank); // Load image
+        updateDisplay(); // Display on led
+        rollSince5 += rollWaitTime;
+      }
+
+      if (millis() >= rollSince6) 
+      {
+        image(animationRoll4); // Load image
+        updateDisplay(); // Display on led
+        rollSince6 += rollWaitTime;
+      }
+
+      if (millis() >= rollSince7) 
+      {
+        image(animationRoll5); // Load image
+        updateDisplay(); // Display on led
+        rollSince7 += rollWaitTime;
+      }
+
+      if (millis() >= rollSince8) 
+      {
+        image(animationRoll6); // Load image
+        updateDisplay(); // Display on led
+        rollSince8 += rollWaitTime;
       }
     }
   }
@@ -531,7 +670,7 @@ void button(void)
           // Do stuff here
           PORTD &= ~_BV(PORTD7); // Candle LED off
           buttonPushCounter++;
-          if (buttonPushCounter == 11) 
+          if (buttonPushCounter == 10) 
           {
             buttonPushCounter = 1;
           }
@@ -555,61 +694,105 @@ void button(void)
     }
 }
 
+void rainbow(void)
+{
+  if (millis() >= rainbowSince1)
+  {
+    OCR2B =  rgbRed; // red if 0 and rest are 255
+    OCR0B =  rgbGreen; // Green if 0 and rest are 255
+    OCR0A =  rgbBlue; // Blue if 0 and rest are 255
+
+    if (move == 0) // Blue to Red
+    {
+      rgbRed--;
+      rgbBlue++;
+
+      if (rgbRed == 0 && rgbBlue == 255 && rgbGreen == 255)
+      {
+        move = 1;
+      }
+    }
+
+    if (move == 1) // Red to Green
+    {
+      rgbGreen--;
+      rgbRed++;
+      if (rgbGreen == 0 && rgbRed == 255 && rgbBlue == 255)
+      {
+        move = 2;
+      }
+    }
+
+    if (move == 2) // Green to Blue
+    {
+      rgbBlue--;
+      rgbGreen++;
+      if (rgbBlue == 0 && rgbGreen == 255 &&  rgbRed == 255)
+      {
+        move = 0;
+      }
+    }
+
+    rainbowSince1 += rainbowWaitTime;
+  }
+}
+
+void setColor(int red, int green, int blue)
+{
+  OCR2B = 255 - red; // Set PWM rate 0 - 255 RED
+  OCR0B = 255 - green; // Set PWM rate 0 - 255 GREEN
+  OCR0A = 255 - blue; // Set PWM rate 0 - 255 BLUE
+}
+
 void colourChange(void)
 {
 
   if (buttonPushCounter == 1) 
   {
-    setColor(255, 255, 0); // YELLOW
+    setColor(255, 0, 0); // RED
   }
 
   if (buttonPushCounter == 2) 
   {
-    setColor(255, 127, 0);  // Orange
+    setColor(175, 0, 175);  // Purple
   }
 
   if (buttonPushCounter == 3) 
   {
-    setColor(255, 0, 0); // RED
-  }
-
-  if (buttonPushCounter == 4) 
-  {
-    setColor(175, 0, 175);  // Purple
-  }
-
-  if (buttonPushCounter == 5) 
-  {
     setColor(0, 255, 255);  // Aqua
   }
 
-  if (buttonPushCounter == 6)
+  if (buttonPushCounter == 4)
   { 
     setColor(0, 0, 255); // BLUE
   }
 
-  if (buttonPushCounter == 7) 
+  if (buttonPushCounter == 5) 
   {
     setColor(0, 255, 0); // GREEN
   }
     
-  if (buttonPushCounter == 8) 
+  if (buttonPushCounter == 6) 
   {
     setColor(255, 255, 255); // WHITE 
   }
 
-  if (buttonPushCounter == 9) 
+  if (buttonPushCounter == 7) 
+  {
+    rainbow(); // run the rgb scroll code
+  }
+    
+  if (buttonPushCounter == 8) 
   {
     PORTD |= _BV(PORTD7); // Candle LED on
     setColor(0, 0, 0); // OFF
   }
-    
-  if (buttonPushCounter == 10) 
+
+  if (buttonPushCounter == 9) 
   {
     setColor(0, 0, 0); // OFF
   }
 }
-
 
 int main(void)
 {
@@ -617,6 +800,7 @@ int main(void)
   DDRD &= ~(1 << PD4); // Set PD4/pin6 as input
   PORTD |= 1 << PD4; // Set PD4/pin6 as input
 
+// RGB leds
   DDRD |= (1 << PD3); // PD3/pin5 is now an output
   DDRD |= (1 << PD5); // PD5/pin11 is now an output
   DDRD |= (1 << PD6); // PD6/pin12 is now an output
